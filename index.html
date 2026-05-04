@@ -15,11 +15,9 @@ body {
   color: white;
 }
 
-/* TEXTO */
 h1 { margin-top: 20px; font-size: 2em; }
 p { font-size: 1.1em; padding: 0 15px; }
 
-/* BOTÓN */
 button {
   margin-top: 10px;
   padding: 12px 20px;
@@ -28,14 +26,6 @@ button {
   border-radius: 10px;
   background: #ff4d6d;
   color: white;
-}
-
-/* CARRO */
-#carro {
-  position: absolute;
-  bottom: 120px;
-  left: 10px;
-  font-size: 40px;
 }
 
 /* PISTA */
@@ -47,7 +37,6 @@ button {
   background: white;
 }
 
-/* META */
 .goal {
   position: absolute;
   right: 10px;
@@ -71,30 +60,118 @@ button {
   border-radius: 10px;
 }
 
-/* CARTA */
-.carta {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0);
-  background: white;
-  color: #333;
-  padding: 20px;
-  border-radius: 15px;
-  width: 80%;
-  max-width: 300px;
-  transition: 0.5s;
+/* CARRO REALISTA */
+#carro {
+  position: absolute;
+  bottom: 110px;
+  left: 10px;
 }
 
-.carta.activa {
-  transform: translate(-50%, -50%) scale(1);
+.f1 {
+  position: relative;
+  width: 100px;
+  height: 40px;
+  animation: vibrar 0.2s infinite;
+}
+
+.body {
+  width: 100%;
+  height: 20px;
+  background: red;
+  border-radius: 5px;
+  position: absolute;
+  top: 10px;
+}
+
+.body::before {
+  content: "";
+  position: absolute;
+  width: 30px;
+  height: 15px;
+  background: darkred;
+  top: -10px;
+  left: 35px;
+  border-radius: 3px;
+}
+
+.wheel {
+  width: 18px;
+  height: 18px;
+  background: black;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 0;
+  animation: girar 0.3s linear infinite;
+}
+
+.front { right: 5px; }
+.back { left: 5px; }
+
+@keyframes girar {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes vibrar {
+  0% { transform: translateY(0); }
+  50% { transform: translateY(1px); }
+  100% { transform: translateY(0); }
+}
+
+/* CARTA */
+.envelope {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 140px;
+  background: #ff4d6d;
+  border-radius: 10px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.flap {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #ff758c;
+  clip-path: polygon(0 0, 100% 0, 50% 60%);
+  transform-origin: top;
+  transition: transform 0.6s;
+  z-index: 2;
+}
+
+.letter {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  background: white;
+  color: #333;
+  top: 5%;
+  left: 5%;
+  border-radius: 10px;
+  padding: 10px;
+  transform: translateY(100%);
+  transition: transform 0.6s;
+  font-size: 0.9em;
+  overflow: auto;
+}
+
+.envelope.open .flap {
+  transform: rotateX(180deg);
+}
+
+.envelope.open .letter {
+  transform: translateY(0);
 }
 </style>
 </head>
 
 <body>
 
-<h1>🏁 ¡Feliz Cumpleaños, CAMBIA_NOMBRE! 🏁</h1>
+<h1>🏁 ¡Feliz Cumpleaños rayito! 🏁</h1>
 
 <p>
 Hoy celebramos a alguien increíble 💙  
@@ -105,19 +182,29 @@ Hoy celebramos a alguien increíble 💙
 
 <div class="progress"><div class="bar" id="barra"></div></div>
 
-<div id="carro">🏎️</div>
+<div id="carro">
+  <div class="f1">
+    <div class="body"></div>
+    <div class="wheel front"></div>
+    <div class="wheel back"></div>
+  </div>
+</div>
+
 <div class="track"></div>
 <div class="goal">🏁</div>
 
 <!-- CARTA -->
-<div class="carta" id="carta">
-  <h3>💌 Mensaje</h3>
-  <p>
-  Sigue acelerando hacia tus sueños 🚀  
-  Espero que cumplas todos tus sueños,  
-  que seas muy feliz y siempre te sientas amado. 💙  
-  Nunca dejes de ser esa persona increíble.
-  </p>
+<div class="envelope" id="envelope">
+  <div class="flap"></div>
+  <div class="letter">
+    <h3>💌 Para ti</h3>
+    <p>
+      Sigue acelerando hacia tus sueños 🚀  
+      Espero que cumplas todo lo que te propongas,  
+      que seas muy feliz y siempre te sientas amado. 💙  
+      Nunca dejes de ser esa persona que lucha por lo que quiere.
+    </p>
+  </div>
 </div>
 
 <!-- MUSICA -->
@@ -130,10 +217,14 @@ let progreso = 0;
 
 function iniciar() {
   document.getElementById("musica").play();
-  document.getElementById("carta").classList.add("activa");
 }
 
-// tocar pantalla para avanzar
+// abrir carta
+document.getElementById("envelope").addEventListener("click", function() {
+  this.classList.toggle("open");
+});
+
+// carrera
 document.body.addEventListener("click", function() {
   if (progreso >= 100) return;
 
@@ -141,7 +232,7 @@ document.body.addEventListener("click", function() {
 
   document.getElementById("barra").style.width = progreso + "%";
 
-  let pantalla = window.innerWidth - 100;
+  let pantalla = window.innerWidth - 120;
   let posicion = (progreso / 100) * pantalla;
 
   document.getElementById("carro").style.left = posicion + "px";
