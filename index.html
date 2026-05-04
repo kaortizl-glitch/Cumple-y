@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>Feliz Cumpleaños Yei | 23 Vueltas</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Tipografías modernas y legibles en móvil -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Pacifico&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: radial-gradient(circle at 20% 30%, #0a0f1e, #03050a);
+      min-height: 100vh;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+      overflow-x: hidden;
+      color: #f3f4f6;
+      position: relative;
+      touch-action: pan-y; /* mejora scroll en móvil */
+    }
+
+    /* Estrellas brillantes */
+    .star {
+      position: absolute;
+      background: #fffae6;
+      border-radius: 50%;
+      box-shadow: 0 0 4px rgba(255,245,200,0.8);
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    @keyframes twinkle {
+      0% { opacity: 0.2; transform: scale(0.9); }
+      100% { opacity: 1; transform: scale(1.1); }
+    }
+
+    /* Intro con efecto para móvil */
+    #intro {
+      position: fixed;
+      inset: 0;
+      background: #000000dd;
+      backdrop-filter: blur(8px);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Pacifico', cursive;
+      font-size: 6rem;
+      z-index: 200;
+      color: #ffd966;
+      text-shadow: 0 0 20px #ffaa33, 0 0 40px #ff6600;
+      transition: opacity 0.8s ease;
+      letter-spacing: 4px;
+    }
+
+    /* Contenido principal */
+    #contenido {
+      display: none;
+      text-align: center;
+      padding: 1rem 1rem 2rem;
+      min-height: 100vh;
+      position: relative;
+      z-index: 5;
+    }
+
+    h1 {
+      font-family: 'Pacifico', cursive;
+      font-size: 2rem;
+      background: linear-gradient(135deg, #FFD966, #FFB347, #FF6B6B);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin: 0.8rem 0 0.5rem;
+      text-shadow: 0 2px 5px rgba(0,0,0,0.3);
+      letter-spacing: 1px;
+      padding: 0 10px;
+    }
+
+    .sub {
+      font-size: 1rem;
+      font-weight: 500;
+      background: rgba(0,0,0,0.55);
+      display: inline-block;
+      padding: 6px 18px;
+      border-radius: 50px;
+      backdrop-filter: blur(4px);
+      margin-bottom: 16px;
+      color: #ffde9c;
+    }
+
+    .vuelta-message {
+      font-weight: 600;
+      font-size: 0.95rem;
+      background: #1e293bd9;
+      display: inline-block;
+      padding: 5px 18px;
+      border-radius: 40px;
+      margin: 8px auto;
+      backdrop-filter: blur(5px);
+    }
+
+    /* AUTO mejorado para móvil */
+    #carro {
+      position: absolute;
+      bottom: 100px;
+      left: -200px;
+      z-index: 12;
+      filter: drop-shadow(0 5px 8px rgba(0,0,0,0.6));
+      pointer-events: none;
+    }
+
+    .car {
+      width: 130px;
+      height: 42px;
+      position: relative;
+    }
+
+    .body {
+      width: 100%;
+      height: 22px;
+      background: linear-gradient(95deg, #e31b23, #9b0f15);
+      position: absolute;
+      top: 10px;
+      border-radius: 20px 12px 12px 20px;
+      box-shadow: inset 0 1px 3px rgba(255,255,200,0.5), 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+    .body::after {
+      content: "";
+      position: absolute;
+      width: 18px;
+      height: 12px;
+      background: #ffcc44;
+      right: 8px;
+      top: 4px;
+      border-radius: 4px;
+      opacity: 0.8;
+    }
+
+    .cabin {
+      width: 30px;
+      height: 18px;
+      background: #2c3e66;
+      position: absolute;
+      top: -2px;
+      left: 52px;
+      border-radius: 14px 10px 4px 4px;
+      box-shadow: inset 0 0 0 2px #82aaff;
+    }
+
+    .wheel {
+      width: 22px;
+      height: 22px;
+      background: #1a1a2e;
+      border-radius: 50%;
+      position: absolute;
+      bottom: -4px;
+      border: 3px solid #3a3a55;
+      box-shadow: 0 0 0 2px #a0a0b0;
+      animation: spin 0.18s linear infinite;
+    }
+
+    .front { right: 6px; }
+    .back { left: 8px; }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes manejar {
+      0% { left: -180px; }
+      100% { left: 110%; }
+    }
+
+    /* Bailarín interactivo */
+    .dancer {
+      font-size: 75px;
+      margin-top: 25px;
+      margin-bottom: 8px;
+      display: inline-block;
+      animation: bailarMod 0.5s infinite alternate ease-in-out;
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.4));
+      cursor: pointer;
+      transition: transform 0.2s;
+      touch-action: manipulation;
+    }
+    .dancer:active {
+      transform: scale(1.15);
+    }
+    @keyframes bailarMod {
+      0% { transform: translateY(0px) rotate(-8deg); }
+      100% { transform: translateY(-8px) rotate(8deg); }
+    }
+
+    /* Sobre elegante (toque amigable) */
+    .envelope {
+      position: fixed;
+      bottom: 25px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      height: 140px;
+      background: linear-gradient(145deg, #ff6a85, #e03b5a);
+      border-radius: 14px;
+      cursor: pointer;
+      z-index: 30;
+      box-shadow: 0 15px 25px rgba(0,0,0,0.3), inset 0 1px 2px rgba(255,255,240,0.4);
+      transition: transform 0.2s;
+      touch-action: manipulation;
+    }
+    .envelope:active {
+      transform: translateX(-50%) scale(0.98);
+    }
+    .flap {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      background: #ff8aa3;
+      clip-path: polygon(0 0, 100% 0, 50% 60%);
+      transform-origin: top;
+      transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+      border-radius: 14px 14px 0 0;
+    }
+    .letter {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 90%;
+      max-width: 400px;
+      background: #fffef7;
+      color: #1e1e2a;
+      padding: 24px 20px;
+      border-radius: 32px;
+      transform: translate(-50%, 120%);
+      transition: transform 0.5s cubic-bezier(0.32, 0.72, 0.2, 1);
+      z-index: 40;
+      font-family: 'Poppins', sans-serif;
+      box-shadow: 0 25px 40px rgba(0,0,0,0.5);
+      text-align: center;
+      border: 1px solid rgba(255,215,150,0.6);
+      pointer-events: auto;
+    }
+    .letter h2 {
+      font-family: 'Pacifico', cursive;
+      color: #e63946;
+      font-size: 1.8rem;
+      margin-bottom: 12px;
+    }
+    .letter p {
+      font-size: 0.95rem;
+      line-height: 1.45;
+      font-weight: 500;
+    }
+    .letter small {
+      display: block;
+      margin-top: 18px;
+      font-style: italic;
+      color: #8b5a2b;
+    }
+    .envelope.open .flap {
+      transform: rotateX(180deg);
+    }
+    .envelope.open + .letter {
+      transform: translate(-50%, -50%);
+    }
+
+    /* Confeti explosion */
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 14px;
+      top: 45%;
+      left: 50%;
+      pointer-events: none;
+      z-index: 100;
+      border-radius: 2px 4px;
+      animation: explosionFall 1.2s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    }
+    @keyframes explosionFall {
+      0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translate(calc(-50% + var(--x)), calc(-50% + var(--y))) rotate(720deg);
+        opacity: 0;
+      }
+    }
+
+    .footer-note {
+      position: relative;
+      margin-top: 100px;
+      font-size: 0.65rem;
+      opacity: 0.7;
+      font-weight: 300;
+      letter-spacing: 1px;
+      padding-bottom: 15px;
+    }
+
+    /* Ajustes móviles específicos */
+    @media (max-width: 600px) {
+      h1 { font-size: 1.7rem; }
+      .dancer { font-size: 65px; margin-top: 20px; }
+      .car { width: 110px; }
+      .body { height: 20px; top: 9px; }
+      .cabin { left: 42px; width: 28px; height: 16px; top: -2px; }
+      .wheel { width: 18px; height: 18px; }
+      .front { right: 5px; }
+      .back { left: 6px; }
+      .envelope { width: 190px; height: 125px; bottom: 20px; }
+      .letter { padding: 18px; max-width: 300px; }
+      .letter p { font-size: 0.85rem; }
+      .vuelta-message { font-size: 0.8rem; }
+      .sub { font-size: 0.9rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="intro">3</div>
+
+<div id="contenido">
+  <h1>🏁 ¡Feliz Cumpleaños, Yei! 🏁</h1>
+  <div class="sub">🚀 23 vueltas alrededor del sol 🚀</div>
+  <div class="vuelta-message">🏎️ Tu vuelta 23… la carrera sigue y tú marcas el ritmo 🏎️</div>
+
+  <div id="carro">
+    <div class="car">
+      <div class="body"></div>
+      <div class="cabin"></div>
+      <div class="wheel front"></div>
+      <div class="wheel back"></div>
+    </div>
+  </div>
+
+  <div class="dancer" id="dancerEmoji">🕺🏾✨</div>
+  <p style="margin-top: 5px; font-weight: 500; background: #00000066; display: inline-block; padding: 0 14px; border-radius: 20px; font-size: 0.8rem;">¡Toca el bailarín para celebrar!</p>
+
+  <div class="envelope" id="envelope">
+    <div class="flap"></div>
+  </div>
+
+  <div class="letter" id="letterBox">
+    <h2>💌 Para Yei</h2>
+    <p>
+      Espero que este nuevo año de vida esté lleno de momentos felices,<br>
+      que te sientas profundamente amado y querido por quienes te rodean.<br><br>
+      Admiro tu forma de ser: <strong>persistente, constante</strong>, siempre avanzando<br>
+      incluso cuando el camino se pone difícil.<br><br>
+      La vida es una pista llena de curvas, frenadas y rectas inesperadas,<br>
+      pero tú lo haces ver más fácil. Sigue siendo esa persona<br>
+      auténtica y fuerte que ilumina a los demás.<br><br>
+      ¡Disfruta cada kilómetro de este viaje! 🎂💙
+    </p>
+    <small>— Con mucho cariño Kathe, en tu día especial</small>
+  </div>
+  
+  <div class="footer-note">⚡ Toca el sobre rojo para leer tu mensaje ⚡</div>
+</div>
+
+<script>
+  // ---------- ESTRELLAS DINÁMICAS (perfecto para móvil) ----------
+  function generarEstrellas() {
+    const starCount = 160;
+    for (let i = 0; i < starCount; i++) {
+      let star = document.createElement("div");
+      star.className = "star";
+      let size = Math.random() * 3 + 1.5;
+      star.style.width = size + "px";
+      star.style.height = size + "px";
+      star.style.left = Math.random() * window.innerWidth + "px";
+      star.style.top = Math.random() * window.innerHeight + "px";
+      let animDuration = Math.random() * 2 + 1.2;
+      star.style.animation = `twinkle ${animDuration}s infinite alternate`;
+      star.style.background = `rgba(255, 240, 180, ${Math.random() * 0.7 + 0.4})`;
+      document.body.appendChild(star);
+    }
+  }
+  generarEstrellas();
+
+  // ---------- SONIDO DE MOTOR REALISTA (compatible móvil, se activa con interacción) ----------
+  let motorAudio = null;
+  let audioIniciado = false;
+  
+  // Creamos el audio con un sonido de motor real (archivo corto pero loop)
+  function crearAudioMotor() {
+    const audio = new Audio();
+    // Usamos un sonido de motor de alta calidad de un recurso libre y confiable (efecto de auto en marcha)
+    // Este archivo es un loop de motor real de SoundJay pero con respaldo CDN para evitar bloqueos CORS
+    audio.src = "https://cdn.pixabay.com/download/audio/2022/01/18/audio_dd2f5a6f6b.mp3?filename=engine-rumble-129713.mp3";
+    audio.loop = true;
+    audio.volume = 0.35;
+    audio.preload = "auto";
+    return audio;
+  }
+
+  // Función para iniciar el sonido (se llamará al tocar cualquier parte por primera vez)
+  function iniciarSonidoMotor() {
+    if (!motorAudio) {
+      motorAudio = crearAudioMotor();
+    }
+    if (motorAudio.paused && !audioIniciado) {
+      motorAudio.play().then(() => {
+        audioIniciado = true;
+        console.log("Motor rugiendo 🎵");
+      }).catch(err => {
+        console.log("El navegador requiere interacción explícita, se reintentará.");
+      });
+    }
+  }
+
+  // ---------- INTRO + CARGA DEL CONTENIDO ----------
+  let countdown = 3;
+  const introDiv = document.getElementById("intro");
+  const contenido = document.getElementById("contenido");
+  
+  let intervalo = setInterval(() => {
+    countdown--;
+    if (countdown > 0) {
+      introDiv.innerText = countdown;
+      introDiv.style.transform = "scale(1.05)";
+      setTimeout(() => { if(introDiv) introDiv.style.transform = "scale(1)"; }, 200);
+    } else if (countdown === 0) {
+      introDiv.innerText = "🎉🏁";
+      introDiv.style.fontSize = "5.5rem";
+      setTimeout(() => {
+        introDiv.style.opacity = "0";
+        setTimeout(() => {
+          introDiv.style.display = "none";
+          contenido.style.display = "block";
+          
+          // Al mostrar contenido, asociamos el sonido a la primera interacción táctil/clic del usuario
+          const activarSonidoEnInteraccion = () => {
+            iniciarSonidoMotor();
+            document.removeEventListener("click", activarSonidoEnInteraccion);
+            document.removeEventListener("touchstart", activarSonidoEnInteraccion);
+          };
+          document.addEventListener("click", activarSonidoEnInteraccion);
+          document.addEventListener("touchstart", activarSonidoEnInteraccion);
+          
+          // Si el usuario ya había interactuado antes (por ejemplo durante la intro), intentamos iniciar el sonido rápido
+          // pero garantizamos que no se pierda.
+        }, 400);
+      }, 300);
+      clearInterval(intervalo);
+    }
+  }, 1000);
+  
+  // ---------- ANIMACIÓN DEL AUTO ----------
+  const carroElement = document.getElementById("carro");
+  carroElement.style.animation = "manejar 5.8s linear infinite";
+  
+  // ---------- CONFETI Y APERTURA DEL SOBRE (MEJORADO PARA MÓVIL) ----------
+  const envelope = document.getElementById("envelope");
+  let yaAbierto = false;
+  
+  function lanzarConfettiMasivo() {
+    const colores = ["#FF3366", "#FFD966", "#6BCB77", "#4D96FF", "#FF6B6B", "#E86A92", "#F4D03F", "#BB8FCE", "#85C1E9", "#FF8C42"];
+    const cantidad = 180;
+    for (let i = 0; i < cantidad; i++) {
+      const conf = document.createElement("div");
+      conf.className = "confetti";
+      const x = (Math.random() - 0.5) * 680 + "px";
+      const y = (Math.random() - 0.5) * 520 + "px";
+      conf.style.setProperty("--x", x);
+      conf.style.setProperty("--y", y);
+      conf.style.backgroundColor = colores[Math.floor(Math.random() * colores.length)];
+      conf.style.width = Math.random() * 9 + 5 + "px";
+      conf.style.height = Math.random() * 12 + 6 + "px";
+      conf.style.borderRadius = Math.random() > 0.5 ? "50%" : "2px";
+      document.body.appendChild(conf);
+      setTimeout(() => conf.remove(), 1300);
+    }
+    // Pequeño efecto de "pop" opcional
+    try {
+      let pop = new Audio("https://www.soundjay.com/misc/sounds/bell-ringing-05.mp3");
+      pop.volume = 0.15;
+      pop.play().catch(()=>null);
+    } catch(e) {}
+  }
+  
+  // Evento táctil/clic para el sobre (móvil + pc)
+  envelope.addEventListener("click", (e) => {
+    e.stopPropagation();
+    envelope.classList.toggle("open");
+    
+    if (envelope.classList.contains("open")) {
+      lanzarConfettiMasivo();
+      yaAbierto = true;
+    }
+  });
+  
+  // También permitimos que se pueda tocar el sobre en dispositivos táctiles sin delay
+  envelope.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    envelope.classList.toggle("open");
+    if (envelope.classList.contains("open")) {
+      lanzarConfettiMasivo();
+      yaAbierto = true;
+    }
+  }, { passive: false });
+  
+  // ---------- BAILARÍN INTERACTIVO CON MINI CONFETI ----------
+  const dancer = document.getElementById("dancerEmoji");
+  
+  function miniConfetiDancer() {
+    for(let i=0;i<50;i++){
+      let miniConf = document.createElement("div");
+      miniConf.className = "confetti";
+      let xRan = (Math.random() - 0.5)*280+"px";
+      let yRan = (Math.random() - 0.5)*220+"px";
+      miniConf.style.setProperty("--x", xRan);
+      miniConf.style.setProperty("--y", yRan);
+      miniConf.style.backgroundColor = `hsl(${Math.random()*360}, 85%, 65%)`;
+      miniConf.style.width = "7px";
+      miniConf.style.height = "7px";
+      document.body.appendChild(miniConf);
+      setTimeout(()=>miniConf.remove(), 900);
+    }
+    dancer.style.transform = "scale(1.25)";
+    setTimeout(()=> dancer.style.transform = "", 200);
+  }
+  
+  dancer.addEventListener("click", miniConfetiDancer);
+  dancer.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    miniConfetiDancer();
+  }, { passive: false });
+  
+  // ---------- ASEGURAR QUE EL SONIDO SE ACTIVA AL INTERACTUAR CON EL SOBRE O BAILARÍN (por si acaso) ----------
+  const forzarAudioConInteraccion = () => {
+    if (!audioIniciado && motorAudio) {
+      motorAudio.play().catch(()=>{});
+    } else if (!motorAudio && !audioIniciado) {
+      motorAudio = crearAudioMotor();
+      motorAudio.play().catch(()=>{}).then(()=> audioIniciado=true);
+    }
+  };
+  
+  envelope.addEventListener("click", forzarAudioConInteraccion);
+  dancer.addEventListener("click", forzarAudioConInteraccion);
+  envelope.addEventListener("touchstart", forzarAudioConInteraccion);
+  dancer.addEventListener("touchstart", forzarAudioConInteraccion);
+  
+  // ---------- RESPONSIVE: REGENERAR ESTRELLAS AL CAMBIAR ORIENTACIÓN ----------
+  window.addEventListener("resize", () => {
+    const stars = document.querySelectorAll(".star");
+    stars.forEach(star => star.remove());
+    generarEstrellas();
+  });
+  
+  // ---------- PEQUEÑO FIX PARA QUE LA CARTA NO SE QUEDE ABIERTA POR DEFECTO ----------
+  envelope.classList.remove("open");
+  
+  // Si el navegador es móvil, ajustamos altura del viewport
+  function setVH() {
+    let vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  setVH();
+  window.addEventListener('resize', setVH);
+  
+  // Mensaje final en consola
+  console.log("🎂 ¡Feliz cumpleaños Yei! - Todo listo para celebrar en móvil y PC");
+</script>
+</body>
+</html>
